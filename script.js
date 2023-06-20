@@ -1,21 +1,12 @@
-let session;
-
-async function loadModel() {
-  console.log("loading model")
-  const modelPath = 'model.onnx';
-  session = new onnx.InferenceSession();
-  console.log("session done")
-  await session.loadModel(modelPath);
-  console.log("loaded")
-}
+import { InferenceSession, Tensor } from "onnxruntime-web";
 
 async function runInference() {
   const text = document.getElementById('textbox').value;
-  if (!session) {
-    await loadModel();
-  }
+  const modelPath = 'model.onnx';
+  let session = new InferenceSession();
+  await session.loadModel(modelPath);
 
-  const inputTensor = new onnx.Tensor([text], 'string', [1]);
+  const inputTensor = new Tensor([text], 'string', [1]);
 
   const outputMap = await session.run([inputTensor]);
   const outputTensor = outputMap.values().next().value;
