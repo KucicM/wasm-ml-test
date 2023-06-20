@@ -1,10 +1,22 @@
-function downloadText() {
+let session;
+
+async function loadModel() {
+  const modelPath = 'model.onnx';
+  session = new onnx.InferenceSession();
+  await session.loadModel(modelPath);
+}
+
+async function runInference() {
   const text = document.getElementById('textbox').value;
-  const element = document.createElement('a');
-  const file = new Blob([text], { type: 'text/plain' });
-  element.href = URL.createObjectURL(file);
-  element.download = 'text.txt';
-  document.body.appendChild(element);
-  element.click();
-  document.body.removeChild(element);
+  if (!session) {
+    await loadModel();
+  }
+
+  const inputTensor = new onnx.Tensor([text], 'string', [1]);
+
+  const outputMap = await session.run([inputTensor]);
+  const outputTensor = outputMap.values().next().value;
+  const outputData = outputTensor.data;
+
+  console.log('Output:', outputData);
 }
