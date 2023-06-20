@@ -1,9 +1,12 @@
 let session;
 
 async function loadModel() {
+  console.log("loading model")
   const modelPath = 'model.onnx';
   session = new onnx.InferenceSession();
+  console.log("session done")
   await session.loadModel(modelPath);
+  console.log("loaded")
 }
 
 async function runInference() {
