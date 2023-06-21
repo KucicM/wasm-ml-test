@@ -20,7 +20,7 @@
 
         const inputTensor = new ort.Tensor('string', [text]);
 
-        const outputMap = await session.run([inputTensor]);
+        const outputMap = await session.run({inputTensor});
         const outputTensor = outputMap.values().next().value;
         const outputData = outputTensor.data;
 
