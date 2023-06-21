@@ -8,7 +8,7 @@ async function run() {
 
     if (session === null) {
         status.innerText = "Loading model";
-        const modelPath = '../models/model.onnx';
+        const modelPath = 'models/model.onnx';
         session = await ort.InferenceSession.create(modelPath);
     }
     status.innerText = "Processing";
