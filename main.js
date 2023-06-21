@@ -8,15 +8,15 @@ async function run() {
 
     if (session === null) {
         status.innerText = "Loading model";
-        const modelPath = 'models/model.onnx';
+        const modelPath = "models/model.onnx";
         session = await ort.InferenceSession.create(modelPath);
     }
     status.innerText = "Processing";
 
-    const text = document.getElementById('textbox').value;
+    const text = document.getElementById("textbox").value;
     const words = text.replace(/\n/g, " ").split(" ");
 
-    const inputTensor = new ort.Tensor('string', words);
+    const inputTensor = new ort.Tensor("string", words);
     const output = await session.run({text_input: inputTensor});
 
     const table = document.getElementById("table");
@@ -45,7 +45,7 @@ async function run() {
 function download() {
     csv_data = table2csv();
     const CSVFile = new Blob([csv_data], { type: "text/csv" });
-    const temp_link = document.createElement('a');
+    const temp_link = document.createElement("a");
     temp_link.download = `lacon-results-${new Date().getTime()}.csv`;
     temp_link.href = window.URL.createObjectURL(CSVFile);
     temp_link.style.display = "none";
@@ -57,9 +57,9 @@ function download() {
 
 function table2csv() {
     var csv_data = [];
-    var rows = document.getElementsByTagName('tr');
+    var rows = document.getElementsByTagName("tr");
     for (var i = 0; i < rows.length; i++) {
-        var cols = rows[i].querySelectorAll('td,th');
+        var cols = rows[i].querySelectorAll("td,th");
         var csvrow = [];
         for (var j = 0; j < cols.length; j++) {
             if (i > 0 && j == 1) {
@@ -70,5 +70,5 @@ function table2csv() {
         }
         csv_data.push(csvrow.join(","));
     }
-    return csv_data.join('\n');
+    return csv_data.join("\n");
 }
