@@ -26,7 +26,7 @@
         const modelPath = 'model.onnx';
         const session = await ort.InferenceSession.create(modelPath);
 
-        const words = text.split(" ")
+        const words = text.split(" ");
         const inputTensor = new ort.Tensor('string', words);
 
         const output = await session.run({text_input: inputTensor});
@@ -42,8 +42,8 @@
           var wordCell = row.insertCell(0);
           var predictedCell = row.insertCell(1);
 
-          wordCell = words[i];
-          predictedCell = output.label.data[i];
+          wordCell.innerHTML = words[i];
+          predictedCell.innerHTML = output.label.data[i];
         }
     }
   </script>
