@@ -19,7 +19,7 @@ pipeline = Pipeline([
 
 pipeline.fit(corpus, [0, 1, 0, 1])
 
-initial_type = [('text_input', StringTensorType([None]))]
+initial_type = [('text_input', StringTensorType())]
 onx = convert_sklearn(pipeline, initial_types=initial_type)
 
 with open("model.onnx", "wb") as f:

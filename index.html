@@ -18,7 +18,7 @@
         const modelPath = 'model.onnx';
         const session = await ort.InferenceSession.create(modelPath);
 
-        const inputTensor = new ort.Tensor('string', [text], [2]);
+        const inputTensor = new ort.Tensor('string', [text]);
 
         const outputMap = await session.run({text_input: inputTensor});
         const outputTensor = outputMap.values().next().value;
