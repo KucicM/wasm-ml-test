@@ -38,22 +38,28 @@
       }
     </style>
 
-  <label for="textbox">Enter text:</label>
-  <input type="text" id="textbox" />
-  <button onclick="runInference()">Run</button>
+  <div>
+    <div>
+      <textarea rows="60" cols="80" id="textbox" placeholder="Enter words"></textarea>
+    </div>
+    <button onclick="run()">Run inference</button>
+  </div>
 
-  <label id="status" style="visibility: hidden;"></label>
-  <table id="table" style="visibility: hidden;">
-    <tr>
-      <th>Word</th>
-      <th>Predicted class</th>
-    </tr>
-  </table>
+  <div>
+    <label id="status" style="visibility: hidden;"></label>
+    <table id="table" style="visibility: hidden;">
+      <tr>
+        <th>Word</th>
+        <th>Predicted class</th>
+        <th>Probability</th>
+      </tr>
+    </table>
+  </div>
 
   <script>
     var session = null;
 
-    async function runInference() {
+    async function run() {
       const status = document.getElementById("status");
       status.style.visibility = "";
 
@@ -65,7 +71,7 @@
       status.innerText = "Processing";
 
       const text = document.getElementById('textbox').value;
-      const words = text.split(" ");
+      const words = text.replace(/\n/g, " ").split(" ");
 
       const inputTensor = new ort.Tensor('string', words);
       const output = await session.run({text_input: inputTensor});
@@ -76,12 +82,14 @@
       }
 
       for (var i = 0; i < words.length; i++) {
-        var row = table.insertRow(i + 1);
-        var wordCell = row.insertCell(0);
-        var predictedCell = row.insertCell(1);
+        if (words[i] === "") {
+          continue;
+        }
 
-        wordCell.innerHTML = words[i];
-        predictedCell.innerHTML = output.label.data[i];
+        var row = table.insertRow(table.rows.length);
+        row.insertCell(0).innerHTML = words[i];
+        row.insertCell(1).innerHTML = output.label.data[i];
+        row.insertCell(2).innerHTML = Math.abs(output.probabilities.data[i * 2]);
       }
       table.style.visibility = "";
 
