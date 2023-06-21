@@ -10,23 +10,34 @@
 </head>
 
 <body>
-  <div>
-    <div>
-      <textarea rows="20"  id="textbox" placeholder="Enter words"></textarea>
+  <textarea rows="20"  id="textbox" placeholder="Enter words"></textarea>
+  <button onclick="run()">Run inference</button>
+
+  <div style="display: flex;">
+    <div style="flex: 1;">
+      <select name="cars" id="cars">
+        <option value="SVM">Volvo</option>
+        <option value="AdaBoost">Saab</option>
+        <option value="KNN">Opel</option>
+      </select>    
     </div>
-    <button onclick="run()">Run inference</button>
-    <button id="downloadB" onclick="download()" style="visibility: hidden;">Download results</button>
+    <div style="flex: 1;">
+      <select name="cars" id="cars">
+        <option value="N-grams">Volvo</option>
+        <option value="Hand engineered">Saab</option>
+        <option value="Tfidf">Audi</option>
+      </select>    
+    </div>
   </div>
 
-  <div>
-    <label id="status" style="visibility: hidden;"></label>
-    <table id="table" style="visibility: hidden;">
-      <tr>
-        <th>Word</th>
-        <th>Predicted class</th>
-        <th>Probability</th>
-      </tr>
-    </table>
-  </div>
+  <label id="status" style="visibility: hidden;"></label>
+  <table id="table" style="visibility: hidden;">
+  <button id="downloadB" onclick="download()" style="visibility: hidden;">Download results</button>
+    <tr>
+      <th>Word</th>
+      <th>Predicted class</th>
+      <th>Probability</th>
+    </tr>
+  </table>
 </body>
 </html>
