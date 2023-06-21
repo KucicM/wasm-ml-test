@@ -12,19 +12,36 @@
   <input type="text" id="textbox" />
   <button onclick="runInference()">Download</button>
 
+  <table id="table">
+    <tr>
+      <th>Word</th>
+      <th>Predited class</th>
+    </tr>
+  </table>
+
   <script>
     async function runInference() {
         const text = document.getElementById('textbox').value;
+
         const modelPath = 'model.onnx';
         const session = await ort.InferenceSession.create(modelPath);
 
-        const inputTensor = new ort.Tensor('string', [text]);
+        const words = text.split(" ")
+        const inputTensor = new ort.Tensor('string', words);
 
-        const outputMap = await session.run({text_input: inputTensor});
-        const outputTensor = outputMap.values().next().value;
-        const outputData = outputTensor.data;
+        const output = await session.run({text_input: inputTensor});
 
-        console.log('Output:', outputData);
+        // fill table
+        var table = document.getElementById("table");
+        while (table.rows.length > 1) {
+          table.deleteRow(1);
+        }
+
+        for (var i = 0; i < words.length; i++) {
+          var row = table.insertRow(i + 1);
+          row.insertCell(0) = words[i];
+          row.insertCell(1) = output.label.data[i];
+        }
     }
   </script>
 </body>
