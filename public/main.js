@@ -8,16 +8,16 @@ async function run() {
 
     if (session === null) {
         status.innerText = "Loading model";
-        const modelPath = 'model.onnx';
-        //session = await ort.InferenceSession.create(modelPath);
+        const modelPath = '../models/model.onnx';
+        session = await ort.InferenceSession.create(modelPath);
     }
     status.innerText = "Processing";
 
     const text = document.getElementById('textbox').value;
     const words = text.replace(/\n/g, " ").split(" ");
 
-    //const inputTensor = new ort.Tensor('string', words);
-    //const output = await session.run({text_input: inputTensor});
+    const inputTensor = new ort.Tensor('string', words);
+    const output = await session.run({text_input: inputTensor});
 
     const table = document.getElementById("table");
     while (table.rows.length > 1) {
@@ -31,8 +31,8 @@ async function run() {
 
         var row = table.insertRow(table.rows.length);
         row.insertCell(0).innerHTML = words[i];
-        //row.insertCell(1).innerHTML = class2label[output.label.data[i]];
-        //row.insertCell(2).innerHTML = Math.abs(output.probabilities.data[i * 2]);
+        row.insertCell(1).innerHTML = class2label[output.label.data[i]];
+        row.insertCell(2).innerHTML = Math.abs(output.probabilities.data[i * 2]);
     }
     table.style.visibility = "";
 
