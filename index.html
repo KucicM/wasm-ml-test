@@ -54,39 +54,38 @@
     var session = null;
 
     async function runInference() {
-        const status = document.getElementById("status");
-        status.style.visibility = "false";
+      const status = document.getElementById("status");
+      status.style.visibility = "";
 
+      if (session === null) {
+        status.innerText = "Loading model";
+        const modelPath = 'model.onnx';
+        session = await ort.InferenceSession.create(modelPath);
+      }
+      status.innerText = "Processing";
 
-        if (session === null) {
-          status.innerText = "Loading model";
-          const modelPath = 'model.onnx';
-          session = await ort.InferenceSession.create(modelPath);
-        }
-        status.innerText = "Processing";
+      const text = document.getElementById('textbox').value;
+      const words = text.split(" ");
 
-        const text = document.getElementById('textbox').value;
-        const words = text.split(" ");
-        const inputTensor = new ort.Tensor('string', words);
+      const inputTensor = new ort.Tensor('string', words);
+      const output = await session.run({text_input: inputTensor});
 
-        const output = await session.run({text_input: inputTensor});
+      const table = document.getElementById("table");
+      while (table.rows.length > 1) {
+        table.deleteRow(1);
+      }
 
-        const table = document.getElementById("table");
-        while (table.rows.length > 1) {
-          table.deleteRow(1);
-        }
+      for (var i = 0; i < words.length; i++) {
+        var row = table.insertRow(i + 1);
+        var wordCell = row.insertCell(0);
+        var predictedCell = row.insertCell(1);
 
-        for (var i = 0; i < words.length; i++) {
-          var row = table.insertRow(i + 1);
-          var wordCell = row.insertCell(0);
-          var predictedCell = row.insertCell(1);
+        wordCell.innerHTML = words[i];
+        predictedCell.innerHTML = output.label.data[i];
+      }
+      table.style.visibility = "";
 
-          wordCell.innerHTML = words[i];
-          predictedCell.innerHTML = output.label.data[i];
-        }
-        table.style.visibility = "false";
-
-        status.style.visibility = "hidden";
+      status.style.visibility = "hidden";
     }
   </script>
 </body>
