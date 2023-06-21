@@ -106,7 +106,7 @@
       csv_data = table2csv();
       const CSVFile = new Blob([csv_data], { type: "text/csv" });
       const temp_link = document.createElement('a');
-      temp_link.download = `lacon-results-${new Date().getMilliseconds()}.csv`;
+      temp_link.download = `lacon-results-${new Date().getTime()}.csv`;
       temp_link.href = window.URL.createObjectURL(CSVFile);
       temp_link.style.display = "none";
 
