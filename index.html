@@ -39,8 +39,11 @@
 
         for (var i = 0; i < words.length; i++) {
           var row = table.insertRow(i + 1);
-          row.insertCell(0) = words[i];
-          row.insertCell(1) = output.label.data[i];
+          var wordCell = row.insertCell(0);
+          var predictedCell = row.insertCell(1);
+
+          wordCell = words[i];
+          predictedCell = output.label.data[i];
         }
     }
   </script>
