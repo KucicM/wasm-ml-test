@@ -40,9 +40,10 @@
 
   <label for="textbox">Enter text:</label>
   <input type="text" id="textbox" />
-  <button onclick="runInference()">Download</button>
+  <button onclick="runInference()">Run</button>
 
-  <table id="table">
+  <label id="status" visible="hidden"></label>
+  <table id="table" visible="hidden">
     <tr>
       <th>Word</th>
       <th>Predicted class</th>
@@ -50,19 +51,27 @@
   </table>
 
   <script>
+    var session = null;
+
     async function runInference() {
+        const status = document.getElementById("status");
+        status.style.visibility = "false";
+
+
+        if (session === null) {
+          status.innerText = "Loading model";
+          const modelPath = 'model.onnx';
+          session = await ort.InferenceSession.create(modelPath);
+        }
+        status.innerText = "Processing";
+
         const text = document.getElementById('textbox').value;
-
-        const modelPath = 'model.onnx';
-        const session = await ort.InferenceSession.create(modelPath);
-
         const words = text.split(" ");
         const inputTensor = new ort.Tensor('string', words);
 
         const output = await session.run({text_input: inputTensor});
 
-        // fill table
-        var table = document.getElementById("table");
+        const table = document.getElementById("table");
         while (table.rows.length > 1) {
           table.deleteRow(1);
         }
@@ -75,6 +84,9 @@
           wordCell.innerHTML = words[i];
           predictedCell.innerHTML = output.label.data[i];
         }
+        table.style.visibility = "false";
+
+        status.style.visibility = "hidden";
     }
   </script>
 </body>
